@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="data.engeto.com" uuid="b9a17df3-7eb3-471c-9961-a4329db99f34">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <remarks>Engeto datova analyza</remarks>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://data.engeto.com:3306/data</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
