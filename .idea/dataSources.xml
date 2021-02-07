@@ -9,5 +9,12 @@
       <jdbc-url>jdbc:mariadb://data.engeto.com:3306/data</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="lamikoko.cz" uuid="03db4857-59f6-4291-a23f-702edf8003a9">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://lamikoko.cz:3306/lamikokocz1</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
