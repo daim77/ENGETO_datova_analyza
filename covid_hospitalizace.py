@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-from pprint import pprint as pp
 import matplotlib.pyplot as plt
 
 
@@ -21,7 +20,7 @@ def data_frame(data_json):
     ]
     df_cumul['date'] = pd.to_datetime(df_cumul['date'])
 
-    print(df_cumul['death'].tail())
+    print('Total death: ', df_cumul['death'].tail())
 
     df = df_cumul.diff(axis=0)
     df['date'] = df_cumul['date']
@@ -35,9 +34,17 @@ def stat(df):
 
 
 def draw_df(df):
-    df['confirmed'] = df['confirmed'].rolling(7).mean()
+    Q = 7
+    df['confirmed'] = df['confirmed'].rolling(Q).mean()
+    df['test'] = df['test'].rolling(Q).mean()
+    df['death'] = df['death'].rolling(Q).mean()
+    df['ag_test'] = df['ag_test'].rolling(Q).mean()
 
-    df.plot(y="confirmed", color='black')
+    df.plot(
+        x='date', y=["confirmed", 'test', 'death', 'ag_test'],
+        color=['red', 'blue', 'black', 'cyan']
+    )
+
     plt.yscale('log')
     plt.title('Day increment')
 
@@ -57,10 +64,6 @@ def main(url):
 
 
 if __name__ == '__main__':
-    URL_HOSP = \
-        'https://' \
-        'onemocneni-aktualne.mzcr.cz/api/v2/covid-19/hospitalizace.json'
-
     URL_CONFIRMED_TESTU = \
         'https://' \
         'onemocneni-aktualne.mzcr.cz/api/v2/covid-19/' \
