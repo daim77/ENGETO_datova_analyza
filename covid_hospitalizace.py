@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from pprint import pprint as pp
 
 
 def download(url):
@@ -13,12 +14,25 @@ def json_grab(data_set):
 
 
 def data_frame(data_json):
-    df = pd.DataFrame(data_json['data'])
+    df_cumul = pd.DataFrame(data_json['data'])
+    df_cumul['datum'] = pd.to_datetime(df_cumul['datum'])
+    df = df_cumul.diff(axis=0)
+    df['datum'] = df_cumul['datum']
+    df.to_csv('covid_cz_diff.csv')
     return df
 
 
 def stat(df):
+    print(df.columns)
+    print(df.dtypes)
     print(df.describe())
+
+# {'datum': '2021-02-14',
+#            'kumulativni_pocet_ag_testu': 2044626,
+#            'kumulativni_pocet_nakazenych': 1090860,
+#            'kumulativni_pocet_testu': 4944403,
+#            'kumulativni_pocet_umrti': 18250,
+#            'kumulativni_pocet_vylecenych': 969154}
 
 
 def main(url):
@@ -27,8 +41,6 @@ def main(url):
     df = data_frame(data_json)
 
     stat(df)
-
-    print(df)
 
 
 if __name__ == '__main__':
@@ -41,4 +53,4 @@ if __name__ == '__main__':
         'onemocneni-aktualne.mzcr.cz/api/v2/covid-19/' \
         'nakazeni-vyleceni-umrti-testy.json'
 
-    main(URL_HOSP)
+    main(URL_CONFIRMED_TESTU)
