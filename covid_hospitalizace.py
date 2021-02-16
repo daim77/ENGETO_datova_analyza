@@ -20,21 +20,27 @@ def data_frame(data_json):
     ]
     df_cumul['date'] = pd.to_datetime(df_cumul['date'])
 
-    print('Total death: ', df_cumul['death'].tail())
-
     df = df_cumul.diff(axis=0)
     df['date'] = df_cumul['date']
+
     df.to_csv('covid_cz_diff.csv')
     return df
 
 
 def stat(df):
-    print(df.describe())
+    print('Last DATA: ')
+    print(df.tail(8))
+    print('=' * 60)
+
+    print(df[df['date'] > pd.to_datetime('2021-01-01')].describe().round(2))
+    print('=' * 60)
+
     print(df[(df['confirmed'] > 10000)].count())
+    print('=' * 60)
 
 
 def draw_df(df):
-    Q = 7
+    Q = 7  # plovouci prumer za Q dni
     df['confirmed'] = df['confirmed'].rolling(Q).mean()
     df['test'] = df['test'].rolling(Q).mean()
     df['death'] = df['death'].rolling(Q).mean()
