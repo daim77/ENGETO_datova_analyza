@@ -64,8 +64,8 @@ def draw_df(df):
         color=['red', 'blue', 'black', 'cyan', '#663300'],
         use_index=True
     )
-
     plt.yscale('log')
+
     plt.ylabel('log')
     plt.xlabel('')
     plt.title('Covid in Czech')
@@ -92,9 +92,8 @@ def main():
 
     df = join_data(df_1, df_2)
 
-    draw_df(df)
-
     stat(df)
+    draw_df(df)
 
 
 if __name__ == '__main__':
