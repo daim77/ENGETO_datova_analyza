@@ -76,6 +76,26 @@ def draw_df(df):
     plt.show()
 
 
+def draw_df_zoomed(df):
+    df_zoomed = df.loc['20210101':]
+
+    df_zoomed.plot(
+        y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp'],
+        color=['red', 'blue', 'black', 'cyan', '#663300'],
+        use_index=True
+    )
+    plt.yscale('log')
+
+    plt.ylabel('log')
+    plt.xlabel('')
+    plt.title('Covid in Czech - zoomed')
+
+    plt.savefig('log_confirmed_zoom.png')
+    plt.savefig('log_confirmed_zoom.svg', format='svg', dpi=1200)
+
+    plt.show()
+
+
 def main():
     data_json = download_data(
         'https://'
@@ -94,6 +114,7 @@ def main():
 
     stat(df)
     draw_df(df)
+    draw_df_zoomed(df)
 
 
 if __name__ == '__main__':
