@@ -54,13 +54,16 @@ def data_frame_3(df):
     df = df[1:]
     df.columns = new_header
     df = df.rename({'﻿datum': 'date'}, axis=1)
+
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
+
     df['upv_kapacita_volna'] = pd.to_numeric(df['upv_kapacita_volna'])
     df = df.groupby(df.index)['upv_kapacita_volna'].sum()
     df = pd.DataFrame(df)
     df.columns = ['ventilation_available']
     df = df.astype({'ventilation_available': int})
+
     return df
 
 
@@ -82,7 +85,7 @@ def stat(df):
 
 
 def draw_df(df):
-    days = 7  # plovouci prumer za Q dni
+    days = 7  # plovouci prumer za XY dni
     df['confirmed'] = df['confirmed'].rolling(days).mean()
     df['test'] = df['test'].rolling(days).mean()
     df['death'] = df['death'].rolling(days).mean()
