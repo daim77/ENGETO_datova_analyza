@@ -1,11 +1,25 @@
 import requests
+import csv
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
 def download_data(url):
     data_set = requests.get(url)
-    return data_set.json()
+    if data_set.status_code != 200:
+        print('Failed to get data:', data_set.status_code)
+    else:
+        return data_set.json()
+
+
+def download_data_csv(url):
+    data_set = requests.get(url)
+    if data_set.status_code != 200:
+        print('Failed to get data:', data_set.status_code)
+    else:
+        wrapper = csv.reader(data_set.text.split('\n'))
+        return pd.DataFrame(wrapper)
 
 
 def data_frame_1(data_json):
@@ -34,9 +48,24 @@ def data_frame_2(data_json):
     df.to_csv('covid_cz_hosp.csv')
     return df
 
+def data_frame_3(df):
+    new_header = df.iloc[0]
+    df = df[1:]
+    df.columns = new_header
+    df = df.rename({'﻿datum': 'date'}, axis=1)
+    df['date'] = pd.to_datetime(df['date'])
+    df.set_index('date', inplace=True)
+    df['upv_kapacita_volna'] = pd.to_numeric(df['upv_kapacita_volna'])
+    df = df.groupby(df.index)['upv_kapacita_volna'].sum()
+    df = pd.DataFrame(df)
+    df.columns = ['volna_kapacita_ventilace']
+    df = df.astype({'volna_kapacita_ventilace': int})
+    return df
 
-def join_data(df_1, df_2):
+
+def join_data(df_1, df_2, df_3):
     df = pd.merge(df_1, df_2, left_index=True, right_index=True)
+    df = pd.merge(df, df_3, left_index=True, right_index=True)
     return df
 
 
@@ -58,10 +87,11 @@ def draw_df(df):
     df['death'] = df['death'].rolling(Q).mean()
     df['ag_test'] = df['ag_test'].rolling(Q).mean()
     df['in_hosp'] = df['in_hosp'].rolling(Q).mean()
+    df['volna_kapacita_ventilace'] = df['volna_kapacita_ventilace'].rolling(Q).mean()
 
     df.plot(
-        y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp'],
-        color=['red', 'blue', 'black', 'cyan', '#663300'],
+        y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp', 'volna_kapacita_ventilace'],
+        color=['red', 'yellow', 'black', 'cyan', '#663300', 'blue'],
         use_index=True
     )
     plt.yscale('log')
@@ -77,7 +107,7 @@ def draw_df(df):
 
 
 def draw_df_zoomed(df):
-    df_zoomed = df.loc['20210101':]
+    df_zoomed = df.loc['20201101':]
 
     df_zoomed.plot(
         y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp'],
@@ -110,7 +140,13 @@ def main():
     )
     df_2 = data_frame_2(data_json)
 
-    df = join_data(df_1, df_2)
+    data_from_csv = download_data_csv(
+        'https://dip.mzcr.cz/api/v1/'
+        'kapacity-intenzivni-pece-vlna-2.csv'
+    )
+    df_3 = data_frame_3(data_from_csv)
+
+    df = join_data(df_1, df_2, df_3)
 
     stat(df)
     draw_df(df)
