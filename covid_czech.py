@@ -48,6 +48,7 @@ def data_frame_2(data_json):
     df.to_csv('covid_cz_hosp.csv')
     return df
 
+
 def data_frame_3(df):
     new_header = df.iloc[0]
     df = df[1:]
@@ -58,8 +59,8 @@ def data_frame_3(df):
     df['upv_kapacita_volna'] = pd.to_numeric(df['upv_kapacita_volna'])
     df = df.groupby(df.index)['upv_kapacita_volna'].sum()
     df = pd.DataFrame(df)
-    df.columns = ['volna_kapacita_ventilace']
-    df = df.astype({'volna_kapacita_ventilace': int})
+    df.columns = ['ventilation_available']
+    df = df.astype({'ventilation_available': int})
     return df
 
 
@@ -81,17 +82,21 @@ def stat(df):
 
 
 def draw_df(df):
-    Q = 7  # plovouci prumer za Q dni
-    df['confirmed'] = df['confirmed'].rolling(Q).mean()
-    df['test'] = df['test'].rolling(Q).mean()
-    df['death'] = df['death'].rolling(Q).mean()
-    df['ag_test'] = df['ag_test'].rolling(Q).mean()
-    df['in_hosp'] = df['in_hosp'].rolling(Q).mean()
-    df['volna_kapacita_ventilace'] = df['volna_kapacita_ventilace'].rolling(Q).mean()
+    days = 7  # plovouci prumer za Q dni
+    df['confirmed'] = df['confirmed'].rolling(days).mean()
+    df['test'] = df['test'].rolling(days).mean()
+    df['death'] = df['death'].rolling(days).mean()
+    df['ag_test'] = df['ag_test'].rolling(days).mean()
+    df['in_hosp'] = df['in_hosp'].rolling(days).mean()
+    df['ventilation_available'] = \
+        df['ventilation_available'].rolling(days).mean()
 
     df.plot(
-        y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp', 'volna_kapacita_ventilace'],
-        color=['red', 'yellow', 'black', 'cyan', '#663300', 'blue'],
+        y=[
+            "confirmed", 'test', 'death', 'ag_test', 'in_hosp',
+            'ventilation_available'
+        ],
+        color=['red', '#F29010', 'black', '#F2D410', '#663300', 'blue'],
         use_index=True
     )
     plt.yscale('log')
@@ -110,8 +115,8 @@ def draw_df_zoomed(df):
     df_zoomed = df.loc['20201101':]
 
     df_zoomed.plot(
-        y=["confirmed", 'test', 'death', 'ag_test', 'in_hosp'],
-        color=['red', 'blue', 'black', 'cyan', '#663300'],
+        y=["confirmed", 'death', 'in_hosp', 'ventilation_available'],
+        color=['red', 'black', '#663300', 'blue'],
         use_index=True
     )
     plt.yscale('log')
