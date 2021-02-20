@@ -31,7 +31,7 @@ def data_frame_1(data_json):
     df.set_index('date', inplace=True)
 
     df = df.diff(axis=0)
-    df.to_csv('covid_cz_diff.csv')
+    df.to_csv('tables/covid_cz_diff.csv')
     return df
 
 
@@ -45,7 +45,7 @@ def data_frame_2(data_json):
         df.columns[[num for num in range(15) if num != 2]],
         axis=1, inplace=True)
 
-    df.to_csv('covid_cz_hosp.csv')
+    df.to_csv('tables/covid_cz_hosp.csv')
     return df
 
 
@@ -117,8 +117,8 @@ def draw_df(df):
     plt.xlabel('')
     plt.title('Covid in Czech')
 
-    plt.savefig('log_confirmed.png')
-    plt.savefig('log_confirmed.svg', format='svg', dpi=1200)
+    plt.savefig('pic/log_confirmed.png')
+    plt.savefig('pic/log_confirmed.svg', format='svg', dpi=1200)
 
     plt.show()
 
@@ -137,8 +137,8 @@ def draw_df_zoomed(df):
     plt.xlabel('')
     plt.title('Covid in Czech - zoomed')
 
-    plt.savefig('log_confirmed_zoom.png')
-    plt.savefig('log_confirmed_zoom.svg', format='svg', dpi=1200)
+    plt.savefig('pic/log_confirmed_zoom.png')
+    plt.savefig('pic/log_confirmed_zoom.svg', format='svg', dpi=1200)
 
     plt.show()
 
