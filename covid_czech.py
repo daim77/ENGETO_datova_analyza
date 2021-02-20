@@ -68,20 +68,29 @@ def data_frame_3(df):
 
 
 def join_data(df_1, df_2, df_3):
-    df = pd.merge(df_1, df_2, left_index=True, right_index=True)
-    df = pd.merge(df, df_3, left_index=True, right_index=True)
+    # df = pd.merge(df_1, df_2, left_index=True, right_index=True)
+    # df = pd.merge(df, df_3, left_index=True, right_index=True)
+    df = pd.concat([df_1, df_2, df_3], axis=1)
     return df
 
 
 def stat(df):
+    print('=' * 82)
     print('Last DATA: ')
+    print('=' * 82)
     print(df.tail(8))
-    print('=' * 60)
-    print(df[df.index > pd.to_datetime('2021-01-01')].describe().round(2))
-    print('=' * 60)
+    print('=' * 82)
 
+    print('DATA description: ')
+    print('=' * 82)
+    print(df[df.index > pd.to_datetime('2021-01-01')].describe().round(2))
+    print('=' * 82)
+
+    print('days with more than 10.000 confirmed: ')
+    print('=' * 82)
     print(df[(df['confirmed'] > 10000)].count())
-    print('=' * 60)
+    print('=' * 82)
+    print('=' * 82)
 
 
 def draw_df(df):
