@@ -93,57 +93,55 @@ def stat(df):
     print('=' * 82)
     print('=' * 82)
 
-    # plovouci prumer
-    df['confirmed'] = df['confirmed'].rolling(7).mean()
-    df['test'] = df['test'].rolling(7).mean()
-    df['death'] = df['death'].rolling(7).mean()
-    df['ag_test'] = df['ag_test'].rolling(7).mean()
-    df['in_hosp'] = df['in_hosp'].rolling(7).mean()
-    df['ventilation_available'] = \
-        df['ventilation_available'].rolling(7).mean()
-
 
 def draw_df(df):
+    days = 7  # plovouci prumer za XY dni
 
-    df.plot(
-        y=[
-            "confirmed",
-            'test',
-            'death',
-            'ag_test',
-            'in_hosp',
-            'ventilation_available'
-        ],
-        color=[
-            'red',
-            '#F29010',
-            'black',
-            '#F2D410',
-            '#663300',
-            'blue'],
-        use_index=True,
-        label=[
-            "Potvrzené případy za den",
-            'Provedené testy za den',
-            'Zemřelí za den',
-            'Provedené AG testy za den',
-            'Počet hospitalizovaných celkem',
-            'Počet dostupných ventilátorů celkem'
-        ]
-    )
+    df['confirmed'] = df['confirmed'].rolling(days).mean()
+    df['test'] = df['test'].rolling(days).mean()
+    df['death'] = df['death'].rolling(days).mean()
+    df['ag_test'] = df['ag_test'].rolling(days).mean()
+    df['in_hosp'] = df['in_hosp'].rolling(days).mean()
+    df['ventilation_available'] = \
+        df['ventilation_available'].rolling(days).mean()
 
-    plt.yscale('log')
+    functions = np.array([
+        ['confirmed', 'test', 'death'],
+        ['ag_test', 'in_hosp', 'ventilation_available']
+    ])
+    values = np.array([
+        [df['confirmed'], df['test'], df['death']],
+        [df['ag_test'], df['in_hosp'], df['ventilation_available']]
+    ])
+    fig, axes = plt.subplots(2, 3, figsize=(24, 12))
 
-    plt.ylabel('logaritmická stupnice', fontsize=10)
-    plt.xlabel('datum', fontsize=10)
+    for i, row in enumerate(axes):
+        for j, ax in enumerate(row):
 
-    plt.title('data: MZČR, výpočet: daim', fontsize=20)
+            if functions[i, j] != 'ventilation_available':
+                ax.semilogy(df.index, values[i, j])
+            else:
+                ax.plot(df.index, values[i, j])
 
-    plt.savefig('pic/log_confirmed.png')
-    plt.savefig('pic/log_confirmed.svg', format='svg', dpi=1200)
+            ax.set_title(functions[i, j], fontsize=14)
+            ax.set_xlabel('datum', fontsize=12)
+            ax.set_ylabel(f'hodnoty {functions[i, j]}', fontsize=12)
+            ax.grid()
 
-    plt.grid()
+
+    # ax1.yscale('log')
+    # ax1.set_ylabel('logaritmická stupnice', fontsize=10)
+    # ax1.xlabel('datum', fontsize=10)
+    # ax1.set_title('data: MZČR, výpočet: daim', fontsize=20)
+    #
+    # ax2.set_ylabel('počet', fontsize=10)
+    # ax2.xlabel('datum', fontsize=10)
+    # ax2.set_title('data: MZČR, výpočet: daim', fontsize=20)
+
     plt.tight_layout()
+
+    # plt.savefig('pic/log_confirmed.png')
+    # plt.savefig('pic/log_confirmed.svg', format='svg', dpi=1200)
 
     plt.show()
 
@@ -164,54 +162,6 @@ def draw_df_zoomed(df):
 
     plt.savefig('pic/log_confirmed_zoom.png')
     plt.savefig('pic/log_confirmed_zoom.svg', format='svg', dpi=1200)
-
-    plt.grid()
-    plt.tight_layout()
-
-    plt.show()
-
-
-def draw_separate(df):
-    functions = np.array([
-        ['7 denní plovoucí průměr potvrzených případů za den',
-         '7 denní plovoucí průměr provedených PCR testů za den',
-         '7 denní plovoucí průměr denních úmrtí za den'
-         ],
-        ['7 denní plovoucí průměr provedených antigenních testů za den',
-         'Celkový 7 denní plovoucí průměr hospitalizovaných',
-         'Celkový počet volných ventilátorů'
-         ]
-    ])
-
-    values = np.array([
-        [df['confirmed'], df['test'], df['death']],
-        [df['ag_test'], df['in_hosp'], df['ventilation_available']]
-    ])
-
-    colors = np.array([
-        ['red', '#F29010', 'black'],
-        ['#F2D410', '#663300', 'blue']
-    ])
-
-    fig, axes = plt.subplots(2, 3, figsize=(24, 12))
-
-    for i, row in enumerate(axes):
-        for j, ax in enumerate(row):
-
-            if functions[i, j] != 'Celkový počet volných ventilátorů':
-                ax.semilogy(df.index, values[i, j], color=colors[i, j])
-            else:
-                ax.plot(df.index, values[i, j], color=colors[i, j])
-
-            ax.set_title('data: MZČR, výpočet: daim', fontsize=20)
-            ax.set_xlabel('datum', fontsize=10)
-            ax.set_ylabel(f'{functions[i, j]}', fontsize=10)
-            ax.grid()
-
-    plt.grid()
-    plt.tight_layout()
-
-    plt.savefig('pic/separate_charts.svg', format='svg', dpi=1200)
 
     plt.show()
 
@@ -239,10 +189,8 @@ def main():
     df = join_data(df_1, df_2, df_3)
 
     stat(df)
-
     draw_df(df)
     draw_df_zoomed(df)
-    draw_separate(df)
 
 
 if __name__ == '__main__':
