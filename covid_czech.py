@@ -217,7 +217,7 @@ def draw_separate(df):
 
     plt.savefig('pic/separate_charts.pdf')
 
-    plt.show()
+    # plt.show()
 
 
 def main():
