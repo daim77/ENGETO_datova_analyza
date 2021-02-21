@@ -139,11 +139,11 @@ def draw_df(df):
 
     plt.title('data: MZČR, výpočet: daim', fontsize=20)
 
+    plt.grid(True)
+    plt.tight_layout()
+
     plt.savefig('pic/log_confirmed.png')
     plt.savefig('pic/log_confirmed.svg', format='svg', dpi=1200)
-
-    plt.grid()
-    plt.tight_layout()
 
     plt.show()
 
@@ -162,11 +162,11 @@ def draw_df_zoomed(df):
     plt.xlabel('')
     plt.title('Covid in Czech - zoomed')
 
+    plt.grid(True)
+    plt.tight_layout()
+
     plt.savefig('pic/log_confirmed_zoom.png')
     plt.savefig('pic/log_confirmed_zoom.svg', format='svg', dpi=1200)
-
-    plt.grid()
-    plt.tight_layout()
 
     plt.show()
 
@@ -193,7 +193,13 @@ def draw_separate(df):
         ['#F2D410', '#663300', 'blue']
     ])
 
-    fig, axes = plt.subplots(2, 3, figsize=(24, 12))
+    fig, axes = plt.subplots(
+        2, 3,
+        figsize=(23.5, 16.5),
+        facecolor='#BDBCBC',
+        dpi=300,
+        edgecolor='black'
+    )
 
     for i, row in enumerate(axes):
         for j, ax in enumerate(row):
@@ -211,7 +217,7 @@ def draw_separate(df):
     plt.grid()
     plt.tight_layout()
 
-    plt.savefig('pic/separate_charts.svg', format='svg', dpi=1200)
+    plt.savefig('pic/separate_charts.pdf')
 
     plt.show()
 
