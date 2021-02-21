@@ -142,8 +142,7 @@ def draw_df(df):
     plt.grid(True)
     plt.tight_layout()
 
-    plt.savefig('pic/log_confirmed.png')
-    plt.savefig('pic/log_confirmed.svg', format='svg', dpi=1200)
+    plt.savefig('pic/log_confirmed.svg', format='svg', dpi=300)
 
     plt.show()
 
@@ -165,8 +164,7 @@ def draw_df_zoomed(df):
     plt.grid(True)
     plt.tight_layout()
 
-    plt.savefig('pic/log_confirmed_zoom.png')
-    plt.savefig('pic/log_confirmed_zoom.svg', format='svg', dpi=1200)
+    plt.savefig('pic/log_confirmed_zoom.svg', format='svg', dpi=300)
 
     plt.show()
 
