@@ -212,12 +212,12 @@ def draw_separate(df):
             ax.set_ylabel(f'{functions[i, j]}', fontsize=10)
             ax.grid()
 
-    plt.grid()
+    plt.grid()  # asi tu je zbytecne
     plt.tight_layout()
 
     plt.savefig('pic/separate_charts.pdf')
 
-    # plt.show()
+    # plt.show()  # internal url 505 Error
 
 
 def main():
