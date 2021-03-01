@@ -30,7 +30,7 @@ def data_frame_1(data_json):
     ]
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
-    df.to_csv('tables/suma_pripadu.csv')
+    df.to_csv('tables/sum_of_cases.csv')
 
     df = df.diff(axis=0)
     return df
@@ -70,7 +70,7 @@ def join_data(df_1, df_2, df_3):
     # df = pd.merge(df_1, df_2, left_index=True, right_index=True)
     # df = pd.merge(df, df_3, left_index=True, right_index=True)
     df = pd.concat([df_1, df_2, df_3], axis=1)
-    df.to_csv('tables/celkovy_prehled.csv')
+    df.to_csv('tables/full_dataframe.csv')
     return df
 
 
