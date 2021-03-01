@@ -30,9 +30,9 @@ def data_frame_1(data_json):
     ]
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
+    df.to_csv('tables/suma_pripadu.csv')
 
     df = df.diff(axis=0)
-    df.to_csv('tables/covid_cz_diff.csv')
     return df
 
 
@@ -45,8 +45,6 @@ def data_frame_2(data_json):
     df.drop(
         df.columns[[num for num in range(15) if num != 2]],
         axis=1, inplace=True)
-
-    df.to_csv('tables/covid_cz_hosp.csv')
     return df
 
 
@@ -72,6 +70,7 @@ def join_data(df_1, df_2, df_3):
     # df = pd.merge(df_1, df_2, left_index=True, right_index=True)
     # df = pd.merge(df, df_3, left_index=True, right_index=True)
     df = pd.concat([df_1, df_2, df_3], axis=1)
+    df.to_csv('tables/celkovy_prehled.csv')
     return df
 
 
