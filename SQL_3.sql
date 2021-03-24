@@ -166,3 +166,4 @@ SELECT
     capital_city
 FROM countries
 WHERE capital_city like '% %';
+
