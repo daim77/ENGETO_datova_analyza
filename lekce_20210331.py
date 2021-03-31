@@ -9,7 +9,7 @@ password = "p7@vw7MCatmnKjy7"
 conn_string = f"mysql+pymysql://{user}:{password}@data.engeto.com/data"
 engeto_conn = db.create_engine(conn_string, echo=True)
 
-# db_connection = engeto_conn.connect()
+db_connection = engeto_conn.connect()
 
 countries_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 
@@ -23,7 +23,7 @@ countries_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 #     engeto_conn, parse_dates=True
 # )
 
-# db_connection.close()
+db_connection.close()
 
 # print(countries_df.head())
 # # podminky
@@ -49,7 +49,97 @@ countries_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 # print(countries_df.loc[selection, ['country', 'independence_date']].sort_values('independence_date'))
 
 # =====
-selection = countries_df['religion'].isin(['Buddhism', 'Hinduism'])  # vraci boolean
-print(countries_df[selection])
-np.unique(countries_df.loc[selection, 'religion'], return_counts=True)
+# selection = countries_df['religion'].isin(['Buddhism', 'Hinduism'])  # vraci boolean
+# print(countries_df[selection])
+# print(np.unique(countries_df.loc[selection, 'religion'], return_counts=True))
+#
+# print(countries_df.query("religion not in ('Christianity', 'Islam')"))
+
+# selection = ~countries_df.religion.isin(['Cristianity', 'Islam'])  # tilda u vektoru jede jako NOT
+# print(selection)
+# print(countries_df[selection])
+#
+# cond1 = ~countries_df.religion.isin(['Christianity', 'Islam'])
+# cond2 = ~countries_df.religion.isna()
+# selection = cond1 & cond2
+# print(countries_df[selection])  # dve podminky
+
+# # prvni zpusob
+# print(countries_df.query("currency_code == 'EUR' and religion != 'Christianity'"))
+#
+# # druhy zpusob
+# cond1 = countries_df.currency_code == 'EUR'
+# cond2 = countries_df.religion != 'Christianity'
+# print(countries_df[cond1 & cond2])  # and nefunguje musi byt &
+
+# # ===
+# cond1 = countries_df.religion == 'Christianity'
+# cond2 = countries_df.continent == 'Asia'
+# cond3 = countries_df.religion == 'Islam'
+# cond4 = countries_df.continent == 'Europe'
+#
+# cond11 = cond1 & cond2
+# cond12 = cond3 & cond4
+#
+# selection = cond11 | cond12
+#
+# print(countries_df[selection])
+# print(countries_df.loc[selection, ['country', 'continent', 'religion']])
+
+
+# tvorba novych sloupcu
+
+# countries_df['new_column'] = 1  # a rovnou ho naplnim cislem => vytvori sloupec
+#
+# countries_df = countries_df.assign(new_new_column=2)  # musim priradit puvodni objekt
+#
+# print(countries_df['new_new_column'].head())
+
+# countries_df = countries_df.assign(manual_popdens=countries_df.population / countries_df.surface_area)
+# print(countries_df)
+
+
+# def celsius_to(data):  # do funkce lze posilat celou DataFrame
+#     return 9/5 * data + 32
+#
+#
+# countries_df['yat_fahrenheit'] = celsius_to(countries_df.yearly_average_temperature)
+# nebo rovnou s fci apply
+# countries_df.yearly_average_temperature.apply(celsius_to)
+
+# GROUP BY
+# print(countries_df[['continent', 'population']].groupby('continent').sum())
+#
+# print(
+#     countries_df[['continent', 'population']].
+#         groupby('continent').
+#         agg({'population': lambda x: np.round(sum(x)/1000000, 1)}).
+#         sort_values('population', ascending=False)
+# )
+
+# ====
+# print(countries_df[['continent', 'surface_area']].groupby('continent').mean())
+
+# ====
+# print(countries_df[['continent', 'population']].groupby('continent').\
+#     agg({'population': ['sum', 'mean', 'count']}))
+
+# df = countries_df[['continent', 'religion', 'population']].\
+#     groupby(['continent', 'religion']).sum()
+# print(df)
+# print(countries_df.query("continent == 'Africa and religion == 'Hinduism'"))
+
+# vazeny prumer
+# df = countries_df[['country', 'continent', 'population', 'life_expectancy']]\
+#     .dropna()
+# wa = lambda x: np.average(x, weights=df.loc[x.index, 'population'])
+# print(df.groupby('continent').agg({'life_expectancy': wa}))
+# print(df.groupby('continent')[['life_expectancy']].mean())
+#
+# print(
+#     countries_df
+#         .query("continent == 'Oceania'")
+#     [['country', 'life_expectancy', 'population']]
+#         .sort_values('life_expectancy', ascending=False)
+# )
 
