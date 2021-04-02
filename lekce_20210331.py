@@ -9,8 +9,6 @@ password = "p7@vw7MCatmnKjy7"
 conn_string = f"mysql+pymysql://{user}:{password}@data.engeto.com/data"
 engeto_conn = db.create_engine(conn_string, echo=True)
 
-db_connection = engeto_conn.connect()
-
 countries_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 
 # df = pd.read_sql_query(
@@ -23,7 +21,6 @@ countries_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 #     engeto_conn, parse_dates=True
 # )
 
-db_connection.close()
 
 # print(countries_df.head())
 # # podminky
@@ -130,11 +127,25 @@ db_connection.close()
 # print(countries_df.query("continent == 'Africa and religion == 'Hinduism'"))
 
 # vazeny prumer
-# df = countries_df[['country', 'continent', 'population', 'life_expectancy']]\
-#     .dropna()
-# wa = lambda x: np.average(x, weights=df.loc[x.index, 'population'])
+df = countries_df[['country', 'continent', 'population', 'life_expectancy']]\
+    .dropna()
+wa = lambda x: np.average(x, weights=df.loc[x.index, 'population'])
 # print(df.groupby('continent').agg({'life_expectancy': wa}))
 # print(df.groupby('continent')[['life_expectancy']].mean())
+
+df1 = df.groupby('continent').agg({'life_expectancy': [wa, 'mean']})
+print(df1)
+df2 = df.groupby('continent')\
+    .apply(
+    lambda x:
+    pd.Series(
+        {'wa': np.average(x.life_expectancy, weights=x.population),
+         'mean': np.average(x.life_expectancy)}
+    )
+)
+print(df2)
+
+
 #
 # print(
 #     countries_df
