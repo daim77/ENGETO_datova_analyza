@@ -77,4 +77,5 @@ joined_df['cost'] = np.where(joined_df['Rent_per_m'] >= joined_df['Rent_per_m'].
 #
 # print(joined_df.loc[(joined_df['cost'] == 'cheap') & (joined_df['Designation'] == 'Inner'), ['safety']])
 
-final_df = joined_df.drop('cost', 1).set_index('Designation', append=True).swap
+final_df = joined_df.drop('cost', 1).set_index('Designation', append=True)
+final_df.reorder_levels(['Designation', 'Area']).sort_index()

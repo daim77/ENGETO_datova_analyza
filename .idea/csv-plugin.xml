@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/working_days_pandas.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
