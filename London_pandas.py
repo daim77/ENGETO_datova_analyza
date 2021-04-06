@@ -6,7 +6,7 @@ living_df = pd.read_csv(
     'London_living/London_living.csv', delimiter=';', decimal=','
 )
 
-print(living_df.head(3))
+# print(living_df.head(3))
 
 # download tables from wiki with pandas - using lxml modul by default
 # SSL certificate problem - update command.certificate in macOS python dir
@@ -40,4 +40,16 @@ merged_df.assign(rent_per_w=lambda x: x.Rent_per_m / 4,
                  gree_dichotomous=
                  np.where(merged_df.green_spec >= 0.5, 'green', 'not_green'),
                  safety_squared=lambda y: y.safety ** 2).round(2)
+# =====
+# designations_df.rename(columns={'London borough': 'Area'}, inplace=True)
+#
+# joined_df = living_df.set_index('Area').join(designations_df.set_index('Area'))
 
+designations_df.rename(
+    columns={'London borough': 'Area'}, inplace=True)
+joined_df = living_df.set_index('Area')\
+    .join(designations_df.set_index('Area'))
+
+df1 = joined_df.sort_values(by='Rent_per_m', ascending=False)
+
+df2 = joined_df.groupby('Designation').mean().round(2)
