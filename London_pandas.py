@@ -52,4 +52,29 @@ joined_df = living_df.set_index('Area')\
 
 df1 = joined_df.sort_values(by='Rent_per_m', ascending=False)
 
-df2 = joined_df.groupby('Designation').mean().round(2)
+# df2 = joined_df.groupby('Designation').mean().round(2)
+df2 = joined_df.groupby('Designation')\
+    .agg({'Rent_per_m': ['median', 'mean', 'max', 'min']})
+df3 = joined_df.groupby('Designation')\
+    .agg({'Rent_per_m': [np.median, np.mean, np.max, np.min]})
+
+
+df4 = joined_df.groupby('Designation').agg({'Rent_per_m': [np.median, np.mean, np.max, np.min], 'safety': ['count', np.min, np.max]})
+print(df4.columns)
+print(df4.loc[:, ('Rent_per_m', 'median')])
+print(df4.columns.levels)
+df4.columns.names = ['variables', 'functions']
+
+# new conditional column
+joined_df['cost'] = np.where(joined_df['Rent_per_m'] >= joined_df['Rent_per_m'].median(), 'expensive', 'cheap')
+
+# cond1 = joined_df['cost'] == 'cheap'
+# cond2 = joined_df['Designation'] == 'Inner'
+# selection = cond1 & cond2
+# print(joined_df[selection])
+#
+# print(joined_df[(joined_df['cost'] == 'cheap') & (joined_df['Designation'] == 'Inner')])
+#
+# print(joined_df.loc[(joined_df['cost'] == 'cheap') & (joined_df['Designation'] == 'Inner'), ['safety']])
+
+final_df = joined_df.drop('cost', 1).set_index('Designation', append=True).swap
