@@ -93,3 +93,4 @@ print(
 
 final_df = joined_df.drop('cost', 1).set_index('Designation', append=True)
 final_df.reorder_levels(['Designation', 'Area']).sort_index()
+
