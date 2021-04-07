@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/lekce_20210407.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/pandas.py">
           <value>
             <Attribute>
