@@ -5,15 +5,20 @@ import sqlalchemy
 from sqlalchemy import inspect
 
 
-# user_e = "student"
-# password_e = "p7@vw7MCatmnKjy7"
-# conn_string = f"mysql+pymysql://{user_e}:{password_e}@data.engeto.com/data"
+# file1 = open('/Users/martindanek/Documents/programovani/engeto_password.txt', "r")
+# user_data = eval(file1.read())
+# file1.close()
+#
+# user = user_data[0][0]
+# password = user_data[0][1]
+#
+# conn_string = f"mysql+pymysql://{user}:{password}@data.engeto.com/data"
 # engeto_conn = sqlalchemy.create_engine(conn_string, echo=True)
 #
 # countries_e_df = pd.read_sql('countries', engeto_conn, parse_dates=True)
 
-user = "lamikoko.cz.1"
-password = "Zzdenka1"
+user = "xxx"
+password = "xxx"
 conn_string = f"mysql+pymysql://{user}:{password}@lamikoko.cz/lamikokocz1"
 
 lamikoko_conn = sqlalchemy.create_engine(conn_string, echo=True)

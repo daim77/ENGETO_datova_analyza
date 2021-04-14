@@ -5,8 +5,13 @@ import sqlalchemy as db
 import matplotlib.pyplot as plt
 
 
-user = "student"
-password = "p7@vw7MCatmnKjy7"
+file1 = open('/Users/martindanek/Documents/programovani/engeto_password.txt', "r")
+user_data = eval(file1.read())
+file1.close()
+
+user = user_data[0][0]
+password = user_data[0][1]
+
 conn_string = f"mysql+pymysql://{user}:{password}@data.engeto.com/data"
 engeto_conn = db.create_engine(conn_string, echo=True)
 
